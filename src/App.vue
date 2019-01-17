@@ -4,9 +4,9 @@
     <v-toolbar-title>GasGame</v-toolbar-title>
   </v-toolbar>
   <v-content>
-    <v-container fluid fill-height>
-      <v-layout justify-center align-center>
-        <v-flex text-xs-center>
+    <v-container fluid fill-height class="secondary">
+      <v-layout fill-height justify-center>
+        <v-flex grow text-xs-center>
           <router-view />
         </v-flex>
       </v-layout>
