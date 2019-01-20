@@ -1,15 +1,21 @@
-const VyperStorage = artifacts.require("VyperStorage");
+/* eslint-env  mocha */
+/* global artifacts, contract, assert */
 
-contract("VyperStorage", () => {
-  it("...should store the value 89.", async () => {
+
+const VyperStorage = artifacts.require('VyperStorage');
+
+contract('VyperStorage', (accounts) => {
+  it('...should only allow calling by set accounts.', async () => {
     const storage = await VyperStorage.deployed();
 
-    // Set value of 89
-    await storage.set(89);
+    await storage.setCaller(accounts[0]);
 
     // Get stored value
-    const storedData = await storage.get();
+    await storage.addPlayer(accounts[0]);
+    const account1 = await storage.getPlayer(accounts[0]);
+    const account2 = await storage.getPlayer(accounts[1]);
 
-    assert.equal(storedData, 89, "The value 89 was not stored.");
+    assert.equal(true, account1, "Account 1 wasn't allowed to add a player.");
+    assert.equal(false, account2, 'Account 2 was allowed to add a player.');
   });
 });
