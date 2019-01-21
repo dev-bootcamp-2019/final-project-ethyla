@@ -27,4 +27,33 @@ contract('VyperStorage', (accounts) => {
 
     assert.equal(true, account, "Account 1 wasn't allowed to add a player.");
   });
+
+  it('...should add a player.', async () => {
+    const storage = await VyperStorage.deployed();
+
+    await storage.addPlayer(accounts[1]);
+    const playerCount = await storage.playerCount();
+
+    assert.equal(2, playerCount, "Didn't have correct amount of players.");
+  });
+
+  it('...should be able to retrieve a player.', async () => {
+    const storage = await VyperStorage.deployed();
+
+    await storage.addPlayer(accounts[2]);
+    const playerAddress = await storage.getPlayerById(3);
+
+    assert.equal(accounts[2], playerAddress, "Didn't have correct amount of players.");
+  });
+
+  it('...should add score points to a player.', async () => {
+    const storage = await VyperStorage.deployed();
+
+    await storage.addPlayer(accounts[3]);
+    await storage.addScore(accounts[3], 10);
+
+    const playerScore = await storage.getScore(accounts[3]);
+
+    assert.equal(10, playerScore, "Didn't have correct amount of players.");
+  });
 });
