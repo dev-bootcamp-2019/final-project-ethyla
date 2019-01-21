@@ -1,6 +1,6 @@
-pragma solidity ^0.5.2;
+pragma solidity ^0.5;
 
-import 'openzeppelin-solidity/blob/master/contracts/ownership/Ownable.sol';
+import 'openzeppelin-solidity/contracts/ownership/Ownable.sol';
 
 contract Scoreboard {
     function addScore(address, uint256) public;
