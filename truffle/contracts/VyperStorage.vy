@@ -21,19 +21,19 @@ def __init__():
 # Adds an address to the list of allowed scoreboard updaters
 @public
 def setCaller(new_caller: address):
-    assert msg.sender == self.owner
+    assert msg.sender == self.owner, "Not the owner."
     self.callers[new_caller] = True
 
 # Removes an address from the list of allowed scoreboard updaters
 @public
 def removeCaller(remove_caller: address):
-    assert msg.sender == self.owner
+    assert msg.sender == self.owner, "Not the owner."
     self.callers[remove_caller] = False
 
 # Adds a player to the 'array' and updates its index
 @public
 def addPlayer(player : address):
-    assert self.callers[msg.sender]
+    assert self.callers[msg.sender], "Not an allowed caller."
     if self.playerExists[player] == False:
         self.playerExists[player] = True
         self.players = self.players + 1
@@ -42,7 +42,7 @@ def addPlayer(player : address):
 # Invalidates a player, so that frontends can exclude them
 @public
 def removePlayer(player : address):
-    assert self.callers[msg.sender]
+    assert self.callers[msg.sender], "Not an allowed caller."
     self.playerExists[player] = False
 
 # Count of all players ever added
@@ -66,19 +66,19 @@ def getPlayerById(playerId : uint256) -> address:
 # Adds points to a specific player
 @public
 def addScore(player : address, add_value : uint256):
-    assert self.callers[msg.sender]
+    assert self.callers[msg.sender], "Not an allowed caller."
     self.scoreboard[player] = self.scoreboard[player] + add_value
 
 # Removes points from a specific player
 @public
 def subScore(player : address, sub_value : uint256):
-    assert self.callers[msg.sender]
+    assert self.callers[msg.sender], "Not an allowed caller."
     self.scoreboard[player] = self.scoreboard[player] - sub_value
 
 # Sets the score of a specific player to a specific amount
 @public
 def setScore(player : address, new_score : uint256):
-    assert self.callers[msg.sender]
+    assert self.callers[msg.sender], "Not an allowed caller."
     self.scoreboard[player] = new_score
 
 # Returns the score of a specific player
