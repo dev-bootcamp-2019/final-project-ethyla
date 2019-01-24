@@ -25,6 +25,11 @@ export default {
   async created() {
     console.log(web3);
     await web3Adapter.init();
+    // Doesn't work with metamask, could be implemented using infura
+    // web3.eth.subscribe('pendingTransactions')
+    //   .on('data', (transaction) => {
+    //     console.log(transaction);
+    //   });
     console.log(web3);
   },
 };
