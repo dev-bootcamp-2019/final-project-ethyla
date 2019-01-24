@@ -5,7 +5,6 @@ import Web3 from 'web3';
 let web3;
 
 const web3Adapter = {
-
   async init() {
     if (window.ethereum) {
       web3 = new Web3(ethereum);
@@ -19,6 +18,7 @@ const web3Adapter = {
       console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
     }
   },
+
 };
 
 export { web3, web3Adapter };

@@ -2,6 +2,8 @@
 <v-app id="inspire">
   <v-toolbar color="primary" dark fixed app>
     <v-toolbar-title>GasGame</v-toolbar-title>
+    <v-spacer></v-spacer>
+    <v-btn :color="networkColor">{{network.name}}</v-btn>
   </v-toolbar>
   <v-content>
     <v-container fluid fill-height class="secondary">
@@ -15,6 +17,10 @@
 </v-app>
 </template>
 <script>
+import {
+  mapActions,
+  mapGetters,
+} from 'vuex';
 import {
   web3,
   web3Adapter,
@@ -30,7 +36,22 @@ export default {
     //   .on('data', (transaction) => {
     //     console.log(transaction);
     //   });
+    await this.setData();
     console.log(web3);
+  },
+  methods: {
+    ...mapActions('web3Data',
+      ['setData']),
+  },
+  computed: {
+    ...mapGetters('web3Data',
+      ['network']),
+    networkColor() {
+      if (this.network.correct) {
+        return 'accent';
+      }
+      return 'error';
+    },
   },
 };
 </script>
