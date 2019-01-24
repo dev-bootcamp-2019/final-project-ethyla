@@ -14,6 +14,21 @@
   </v-content>
 </v-app>
 </template>
+<script>
+import {
+  web3,
+  web3Adapter,
+} from './services/web3Adapter';
+
+export default {
+
+  async created() {
+    console.log(web3);
+    await web3Adapter.init();
+    console.log(web3);
+  },
+};
+</script>
 
 <style lang="scss">
 
