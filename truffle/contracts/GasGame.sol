@@ -8,6 +8,7 @@ contract Scoreboard {
     function addPlayer(address) public;
     function playerCount() public view returns (uint256);
     function getPlayerById(uint256) public view returns (address);
+    function getScore(address) public view returns (uint256);
 }
 
 contract GasGame is Ownable {
@@ -66,6 +67,10 @@ contract GasGame is Ownable {
                 allPlayers.push(player);
             }
         }
+    }
+
+    function getScore(address _player) public view returns (uint256) {
+        return scoreboard.getScore(_player);
     }
 
     function setTxValue(uint256 _newValue) public onlyOwner {
