@@ -18,6 +18,11 @@ callers: map(address, bool)
 def __init__():
     self.owner = msg.sender
 
+@public
+def setOwner(new_owner: address):
+    assert msg.sender == self.owner, "Not the owner."
+    self.owner = new_owner
+
 # Adds an address to the list of allowed scoreboard updaters
 @public
 def setCaller(new_caller: address):
