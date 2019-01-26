@@ -92,7 +92,8 @@ def isPlayer(player : address) -> bool:
 # @notice Returns the player by their id
 # @dev Returns the player at the specific index of the array
 # @param playerId the id or index of the player
-# @return the address of the player at the index/id@public
+# @return the address of the player at the index/id
+@public
 @constant
 def getPlayerById(playerId : uint256) -> address:
     return self.playerMap[playerId]
@@ -128,7 +129,8 @@ def setScore(player : address, new_score : uint256):
 # @notice Returns the score of a specific player
 # @dev The current total score of a player
 # @param player the address of the player
-# @return Total score of the player@public
+# @return Total score of the player
+@public
 @constant
 def getScore(player : address) -> uint256:
     return self.scoreboard[player]
