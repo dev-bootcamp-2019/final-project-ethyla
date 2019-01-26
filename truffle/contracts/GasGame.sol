@@ -82,14 +82,14 @@ contract GasGame is Ownable {
 
     /// @dev Convenience function to return all addresses of all players
     /// @return an array containing all registered players
-    function getAllPlayers() public view returns (address[]) {
+    function getAllPlayers() public view returns (address[] memory) {
         uint256 highestIndex = scoreboard.playerCount();
-        address[] allPlayers;
+        address[] memory allPlayers;
         // Loop through the "array"
         for (uint256 i = 0; i <= highestIndex; i++) {
             address player = scoreboard.getPlayerById(i);
             if (scoreboard.isPlayer(player)) {
-                allPlayers.push(player);
+                allPlayers[i] = player;
             }
         }
     }
