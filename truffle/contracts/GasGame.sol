@@ -6,6 +6,8 @@ contract Scoreboard {
     function addScore(address, uint256) public;
     function isPlayer(address) public view returns (bool);
     function addPlayer(address) public;
+    function playerCount() public view returns (uint256);
+    function getPlayerById(uint256) public view returns (address);
 }
 
 contract GasGame is Ownable {
@@ -37,7 +39,6 @@ contract GasGame is Ownable {
         uint256 totalGas = leftover + used;
         uint256 weiPayed = tx.gasprice * totalGas;
         uint256 totalWei = weiPayed + msg.value;
-        emit scoreAdded(msg.sender, leftover);
         require(totalWei == txValue);
         _;
     }
@@ -54,6 +55,17 @@ contract GasGame is Ownable {
         }
         scoreboard.addScore(msg.sender, score);
         emit scoreAdded(msg.sender, score);
+    }
+
+    function getAllPlayers() public view returns (address[]) {
+        uint256 highestIndex = scoreboard.playerCount();
+        address[] allPlayers;
+        for(uint256 i = 0; i <= highestIndex; i++){
+            address player = scoreboard.getPlayerById(i);
+            if(scoreboard.isPlayer(player)) {
+                allPlayers.push(player);
+            }
+        }
     }
 
     function setTxValue(uint256 _newValue) public onlyOwner {
