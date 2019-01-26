@@ -1,6 +1,6 @@
 pragma solidity ^0.5;
 
-import 'openzeppelin-solidity/contracts/ownership/Ownable.sol';
+import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
 contract Scoreboard {
     function addScore(address, uint256) public;
@@ -19,6 +19,8 @@ contract GasGame is Ownable {
 
     uint256 lastBlock;
 
+    event ScoreAdded(address player, uint256 score);
+
     constructor(address _scoreboard) public {
         // Sets the address of the highscore
         scoreboard = Scoreboard(_scoreboard);
@@ -27,43 +29,45 @@ contract GasGame is Ownable {
         txValue = 3000000;
     }
 
-    event scoreAdded(address player, uint256 score);
-
-    modifier onlyThousandthBlock(){
-      require(block.number % 1000 == 0, 'This is not a thousandth block.');
-      _;
+    modifier onlyThousandthBlock() {
+        require(block.number % 1000 == 0, "This is not a thousandth block.");
+        _;
     }
 
-    modifier onlyCorrectValue(){
+    modifier onlyCorrectValue() {
         uint256 leftover = gasleft();
         uint256 used = 21430;
         uint256 totalGas = leftover + used;
         uint256 weiPayed = tx.gasprice * totalGas;
         uint256 totalWei = weiPayed + msg.value;
-        require(totalWei == txValue);
+        require(totalWei == txValue, "Total tx value does not match expected value.");
         _;
     }
 
     function play() public payable onlyThousandthBlock {
         uint256 score = gasleft();
-        if(lastBlock != block.number){
+        if (lastBlock != block.number) {
             //You are the first in the block
             lastBlock = block.number;
             score = score * 2;
         }
-        if(!scoreboard.isPlayer(msg.sender)){
+        if (!scoreboard.isPlayer(msg.sender)) {
             scoreboard.addPlayer(msg.sender);
         }
         scoreboard.addScore(msg.sender, score);
-        emit scoreAdded(msg.sender, score);
+        emit ScoreAdded(msg.sender, score);
+    }
+
+    function setTxValue(uint256 _newValue) public onlyOwner {
+        txValue = _newValue;
     }
 
     function getAllPlayers() public view returns (address[]) {
         uint256 highestIndex = scoreboard.playerCount();
         address[] allPlayers;
-        for(uint256 i = 0; i <= highestIndex; i++){
+        for (uint256 i = 0; i <= highestIndex; i++) {
             address player = scoreboard.getPlayerById(i);
-            if(scoreboard.isPlayer(player)) {
+            if (scoreboard.isPlayer(player)) {
                 allPlayers.push(player);
             }
         }
@@ -71,9 +75,5 @@ contract GasGame is Ownable {
 
     function getScore(address _player) public view returns (uint256) {
         return scoreboard.getScore(_player);
-    }
-
-    function setTxValue(uint256 _newValue) public onlyOwner {
-        txValue = _newValue;
     }
 }
