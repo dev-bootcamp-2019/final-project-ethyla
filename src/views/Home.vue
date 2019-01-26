@@ -2,8 +2,8 @@
 <v-layout row fill-height>
   <v-flex xs6 pr-3>
     <v-layout fill-height column>
-      <v-flex style="min-height:50%;">
-        Inputs and stuff
+      <v-flex style="min-height:50%; display: flex;">
+        <TxConfigurator></TxConfigurator>
       </v-flex>
       <v-flex style="min-height:50%; max-height:50%;">
         <!-- Current Block to see pending tx -->
@@ -97,9 +97,13 @@
 </template>
 
 <script>
+import TxConfigurator from '../components/TxConfigurator.vue';
+
 export default {
   name: 'home',
-  components: {},
+  components: {
+    TxConfigurator,
+  },
   data() {
     return {
       search: '',
