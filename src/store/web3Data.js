@@ -9,12 +9,14 @@ const state = {
   },
   currentBlock: '',
   init: false,
+  userAccount: '',
 };
 
 const getters = {
   network: state => state.network,
   currentBlock: state => state.currentBlock,
   init: state => state.init,
+  userAccount: state => state.userAccount,
 };
 
 const actions = {
@@ -58,6 +60,9 @@ const actions = {
   async setInit({ commit }) {
     commit('setInit');
   },
+  async setUserAccount({ commit }, account) {
+    commit('setUserAccount', account);
+  },
 };
 
 const mutations = {
@@ -69,6 +74,9 @@ const mutations = {
   },
   setInit(state) {
     state.init = true;
+  },
+  setUserAccount(state, account) {
+    state.userAccount = account;
   },
 };
 

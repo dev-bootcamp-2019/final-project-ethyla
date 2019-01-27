@@ -66,7 +66,6 @@ import {
 
 import {
   gasGameContract,
-  userAccount,
 } from '../services/web3Adapter';
 
 export default {
@@ -107,7 +106,7 @@ export default {
           gas: this.currentValues.gasLimit,
           gasPrice: this.currentValues.gasPrice,
           value: this.currentValues.value,
-          from: userAccount,
+          from: this.userAccount,
         });
         this.status = 'success';
       } catch (e) {
@@ -124,7 +123,7 @@ export default {
   },
   computed: {
     ...mapGetters('web3Data',
-      ['currentBlock']),
+      ['currentBlock', 'userAccount']),
     missingAmount() {
       const gasValue = parseInt(this.currentValues.gasPrice, 10) * parseInt(this.currentValues.gasLimit, 10);
       const totalValue = parseInt(gasValue, 10) + parseInt(this.currentValues.value, 10);

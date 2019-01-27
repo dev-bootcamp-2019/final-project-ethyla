@@ -3,7 +3,7 @@
   <v-toolbar color="primary" dark fixed app>
     <v-toolbar-title>GasGame</v-toolbar-title>
     <v-spacer></v-spacer>
-    <v-btn color="accent" style="text-transform:none;">{{vUserAccount}}</v-btn>
+    <v-btn color="accent" style="text-transform:none;">{{userAccount}}</v-btn>
     <v-btn :color="networkColor">{{network.name}}</v-btn>
   </v-toolbar>
   <v-content>
@@ -23,20 +23,15 @@ import {
   mapGetters,
 } from 'vuex';
 import {
-  web3,
   web3Adapter,
-  userAccount,
 } from './services/web3Adapter';
 
 export default {
   data() {
-    return {
-      vUserAccount: '',
-    };
+    return {};
   },
   async created() {
     await web3Adapter.init();
-    this.vUserAccount = userAccount;
     // Doesn't work with metamask, could be implemented using infura
     // web3.eth.subscribe('pendingTransactions')
     //   .on('data', (transaction) => {
@@ -59,7 +54,7 @@ export default {
   },
   computed: {
     ...mapGetters('web3Data',
-      ['network']),
+      ['network', 'userAccount']),
     networkColor() {
       if (this.network.correct) {
         return 'accent';
