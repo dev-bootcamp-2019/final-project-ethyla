@@ -29,7 +29,6 @@ import {
 export default {
 
   async created() {
-    console.log(web3);
     await web3Adapter.init();
     // Doesn't work with metamask, could be implemented using infura
     // web3.eth.subscribe('pendingTransactions')
@@ -37,11 +36,19 @@ export default {
     //     console.log(transaction);
     //   });
     await this.setData();
-    console.log(web3);
+    this.pollLatestBlock();
   },
   methods: {
-    ...mapActions('web3Data',
-      ['setData']),
+    ...mapActions('web3Data', [
+      'setData',
+      'updateLatestBlock',
+    ]),
+    pollLatestBlock() {
+      setTimeout(() => {
+        this.updateLatestBlock();
+        this.pollLatestBlock();
+      }, 1000);
+    },
   },
   computed: {
     ...mapGetters('web3Data',

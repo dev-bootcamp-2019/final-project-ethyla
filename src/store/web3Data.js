@@ -7,10 +7,12 @@ const state = {
     name: '',
     correct: '',
   },
+  currentBlock: '',
 };
 
 const getters = {
   network: state => state.network,
+  currentBlock: state => state.currentBlock,
 };
 
 const actions = {
@@ -47,11 +49,18 @@ const actions = {
     };
     commit('changeData', newData);
   },
+  async updateLatestBlock({ commit }) {
+    const latest = await web3.eth.getBlock('latest');
+    commit('setCurrentBlock', latest.number);
+  },
 };
 
 const mutations = {
   changeData(state, data) {
     state.network = data;
+  },
+  setCurrentBlock(state, number) {
+    state.currentBlock = number;
   },
 };
 

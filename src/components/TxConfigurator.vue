@@ -28,8 +28,9 @@
         <v-flex>
           <v-layout align-top pb-4>
             <v-tooltip :open-delay="openTime" top open-on-hover="false">
-              <v-btn :disabled="!valid || !correctAmount" slot="activator" @click="sendTx" color="primary">Send Tx</v-btn>
-              <span>You are missing {{missingAmount}} worth of wei.</span>
+              <v-btn :disabled="!valid || !correctAmount || !correctBlock" slot="activator" @click="sendTx" color="primary">Send Tx</v-btn>
+              <span v-if="!correctAmount">You are missing {{missingAmount}} worth of wei.</span>
+              <span v-else-if="!correctBlock">Game is only active every 10th block.</span>
             </v-tooltip>
             <v-btn @click="resetAll" color="primary">Reset All</v-btn>
           </v-layout>
@@ -42,7 +43,13 @@
 </template>
 
 <script>
-// TODO: calculate missing value, don't try to calculate on the fly
+import {
+  mapGetters,
+} from 'vuex';
+
+import {
+  gasGameContract,
+} from '../services/web3Adapter';
 
 export default {
   data() {
@@ -73,14 +80,20 @@ export default {
     };
   },
   methods: {
-    sendTx() {
-
+    async sendTx() {
+      gasGameContract.methods.play().send({
+        gas: this.currentValues.gasLimit,
+        gasPrice: this.currentValues.gasPrice,
+        value: this.currentValues.value,
+      });
     },
     resetAll() {
       this.currentValues = this.defaultValues;
     },
   },
   computed: {
+    ...mapGetters('web3Data',
+      ['currentBlock']),
     missingAmount() {
       const gasValue = parseInt(this.currentValues.gasPrice, 10) * parseInt(this.currentValues.gasLimit, 10);
       const totalValue = parseInt(gasValue, 10) + parseInt(this.currentValues.value, 10);
@@ -92,10 +105,14 @@ export default {
       return totalValue === this.totalTxValue;
     },
     openTime() {
-      if (this.correctAmount) {
+      if (this.correctAmount && this.correctBlock) {
         return 1000000;
       }
       return 200;
+    },
+    correctBlock() {
+      const nextBlock = parseInt(this.currentBlock, 10) + 1;
+      return nextBlock % 10 === 0;
     },
   },
 };
