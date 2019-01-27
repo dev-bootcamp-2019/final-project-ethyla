@@ -44,9 +44,11 @@ For testing you won't need to deploy the contracts, the DApp uses the rinkeby co
 
 Because there seems to be a bug in relation to using vyper with truffle, please first delete the truffle/build folder.  
 Everything here is done using truffle develop. But using ganache should be fine.
+This project uses truffle 5.0.2
 
 #### Vyper
 Also you will need vyper for almost everything contract related.  
+This project uses version: 0.1.0b6
 Follow the instructions on [https://vyper.readthedocs.io/en/latest/installing-vyper.html](https://vyper.readthedocs.io/en/latest/installing-vyper.html)
 
 #### Test
