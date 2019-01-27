@@ -49,6 +49,7 @@ import {
 
 import {
   gasGameContract,
+  userAccount,
 } from '../services/web3Adapter';
 
 export default {
@@ -85,6 +86,7 @@ export default {
         gas: this.currentValues.gasLimit,
         gasPrice: this.currentValues.gasPrice,
         value: this.currentValues.value,
+        from: userAccount,
       });
     },
     resetAll() {

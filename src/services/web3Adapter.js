@@ -5,13 +5,15 @@ import GasGame from '../../truffle/build/contracts/GasGame.json';
 
 let web3;
 let gasGameContract;
+let userAccount;
 
 const web3Adapter = {
   async init() {
     if (window.ethereum) {
       web3 = new Web3(ethereum);
       try {
-        await ethereum.enable();
+        const accounts = await ethereum.enable();
+        userAccount = accounts[0];
         gasGameContract = new web3.eth.Contract(GasGame.abi, GasGame.networks[4].address);
       } catch (error) {
         // User denied account access...
@@ -20,8 +22,13 @@ const web3Adapter = {
     } else {
       console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
     }
+    ethereum.on('accountsChanged', (accounts) => {
+      userAccount = accounts[0];
+    });
   },
 
 };
 
-export { web3, web3Adapter, gasGameContract };
+export {
+  web3, web3Adapter, gasGameContract, userAccount,
+};
