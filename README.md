@@ -130,6 +130,9 @@ It is also theoretically possible (especially for miners) to have a gasprice of 
 
 The UI is updated every new block, by polling new blocks.
 
+### User account
+The currently selected Metamask account is always display in the top right corner along with the network. It updates on changes.
+
 ## Stretch Requirements
 
 ### Vyper
@@ -147,13 +150,14 @@ The disallowing of calls makes it possible to keep the storage even if one game 
 
 The app is hosted on ipfs. You can access it on one of the gateways:
 
-https://gateway.ipfs.io/ipfs/QmXSxVDpY3iydHrypQw7rw8mjxEtbcCiRH9Jqx2SdRxNfB/
+https://gateway.ipfs.io/ipfs/QmY9AggW1Nwwkzrtqf9jEp6JpeHccehVQxK5yFdVqduZmJ/
 
 Or on your own local gateway:
-#### IPNS (I might update this later, the ipfs link is the project submitted at the deadline)  
+
+##### IPNS (I might update this later, the ipfs link is the project submitted at the deadline)  
 http://localhost:8080/ipns/QmRTaWxw9yTvFRxPNm3ZCD22raTrbN2PgZvTiKWYuroYN8/
 
-#### IPFS  
-http://localhost:8080/ipfs/QmXSxVDpY3iydHrypQw7rw8mjxEtbcCiRH9Jqx2SdRxNfB/
+##### IPFS  
+http://localhost:8080/ipfs/QmY9AggW1Nwwkzrtqf9jEp6JpeHccehVQxK5yFdVqduZmJ/
 
 ###### Important, because I only host it on my laptop and the gateways only cache so long (I also pined it on infura) it might not be reachable, send me a mail and I will start my local node.
