@@ -1,0 +1,7 @@
+The contracts are deployed on rinkeby.
+
+GasGame at: 0xb208aa731dFEc83899eA784bB03D79153451F167
+https://rinkeby.etherscan.io/address/0xb208aa731dFEc83899eA784bB03D79153451F167
+
+VyperStorage at: 0x9145Af24D4a30C3eF5583619C1bB3f93BDB6A921
+https://rinkeby.etherscan.io/address/0x9145Af24D4a30C3eF5583619C1bB3f93BDB6A921
