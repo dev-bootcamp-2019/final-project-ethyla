@@ -58,7 +58,7 @@ export default {
       rules: {
         required: value => !!value || 'Required.',
         number: value => !isNaN(value) || 'Must be a number.',
-        minGasLimit: value => value >= 100000 || 'Must be atleast 100000 or tx will fail.',
+        minGasLimit: value => value >= 39434 || 'Must be atleast 39434 or tx will fail.',
       },
       valid: true,
       defaultValues: {
