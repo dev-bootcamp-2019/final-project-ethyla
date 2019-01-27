@@ -7,13 +7,14 @@ This project aims to do this by creating a game where points will be awarded for
 
 ## Implemented features
 
-Currently the game consists of a contract that restricts the total value (gas + value) to 0.1 ETH. A transaction builder allows the player to manipulate gaslimit, gasprice and send value. The goal is to have the first transaction in a given block, that reaches the contract. Being the first awards double the points. Points are awarded equal to the amount of value send to the contract in wei.  
+Currently the game consists of a contract that restricts the total value (gas + value) to 0.1 ETH. A transaction builder allows the player to manipulate gaslimit, gasprice and send value. The goal is to have the first transaction in a given block, that reaches the contract. Being the first awards double the points. Points are awarded equal to the amount of remaining gas send to the contract in wei.  
 All earned points are collected in a different contract that acts as a highscore.
 
 ## Further ideas
 
 - Implement a "winner", the player with the most points during a round will get all send ether as a reward
 - Implement various common functions (such as ERC-20 transfer or kitty breeding) that give various amounts of points. This could be done to teach players how different transactions and their required gas require different strategies to get early into a block. (Very useful for example during ICOs).
+- Don't use remaining gas for points but value, maybe make a different game version
 
 ## Problems
 
