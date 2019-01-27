@@ -1,50 +1,42 @@
 <template>
 <v-layout column>
-  <v-flex>Welcome to the GasGame. You can play by sending transactions to the game contract. All transactions have a fixed total size of 0.1 ETH. The higher the remaining value (after you payed for gas) the more points you earn. if you are the first
-    in a block you get double the points!</v-flex>
+  <v-flex>
+    <div class="text-xs-left">
+      <div class="headline">Welcome to the GasGame.</div>
+      <p> You can play by sending transactions to the game contract. All transactions have a fixed total size of 0.1 ETH. The higher the remaining value (after you payed for gas) the more points you earn. if you are the first
+        in a block you get double the points!</p>
+    </div>
+  </v-flex>
   <v-flex xs12>
     <v-form v-model="valid">
+
       <v-layout align-center>
-        <v-flex xs10>
-          <v-text-field v-model="currentValues.gasPrice" :readonly="locked.gasPrice" :rules="[rules.required, rules.number]" label="GasPrice" box color="black">
+        <v-flex xs6 pr-2>
+          <v-text-field v-model="currentValues.gasPrice" :rules="[rules.required, rules.number]" label="GasPrice" box color="black">
           </v-text-field>
         </v-flex>
-        <v-flex xs2>
-          <v-tooltip open-delay="10000000" top v-model="toolTipGasPrice" open-on-hover="false">
-            <v-btn slot="activator" @click="lockGasPriceAction(locked.gasPrice)">{{gasPriceLocked}}</v-btn>
-            <span>Unlock something else first.</span>
-          </v-tooltip>
+        <v-flex xs6 pl-2>
+          <v-text-field v-model="currentValues.gasLimit" :rules="[rules.required, rules.number, rules.minGasLimit]" label="GasLimit" box color="black"></v-text-field>
         </v-flex>
       </v-layout>
+
       <v-layout align-center>
         <v-flex xs10>
-          <v-text-field v-model="currentValues.gasLimit" :readonly="locked.gasLimit" :rules="[rules.required, rules.number]" label="GasLimit" box color="black"></v-text-field>
+          <v-text-field v-model="currentValues.value" :rules="[rules.required, rules.number]" label="Value" box color="black"></v-text-field>
         </v-flex>
-        <v-flex xs2>
-          <v-tooltip open-delay="10000000" top v-model="toolTipGasLimit">
-            <v-btn slot="activator" @click="lockGasLimitAction(locked.gasLimit)">{{gasLimitLocked}}</v-btn>
-            <span>Unlock something else first.</span>
-          </v-tooltip>
+
+        <v-flex>
+          <v-layout align-top pb-4>
+            <v-tooltip :open-delay="openTime" top open-on-hover="false">
+              <v-btn :disabled="!valid || !correctAmount" slot="activator" @click="sendTx" color="primary">Send Tx</v-btn>
+              <span>You are missing {{missingAmount}} worth of wei.</span>
+            </v-tooltip>
+            <v-btn @click="resetAll" color="primary">Reset All</v-btn>
+          </v-layout>
         </v-flex>
-      </v-layout>
-      <v-layout align-center>
-        <v-flex xs10>
-          <v-text-field v-model="currentValues.value" :readonly="locked.value" :rules="[rules.required, rules.number]" label="Value" box color="black"></v-text-field>
-        </v-flex>
-        <v-flex xs2>
-          <v-tooltip open-delay="10000000" top v-model="toolTipValue">
-            <v-btn slot="activator" @click="lockValueAction(locked.value)">{{valueLocked}}</v-btn>
-            <span>Unlock something else first.</span>
-          </v-tooltip>
-        </v-flex>
+
       </v-layout>
     </v-form>
-  </v-flex>
-  <v-flex>
-    <v-layout align-center>
-      <v-btn :disabled="!valid">Send Tx</v-btn>
-      <v-btn>Reset All</v-btn>
-    </v-layout>
   </v-flex>
 </v-layout>
 </template>
@@ -58,6 +50,7 @@ export default {
       rules: {
         required: value => !!value || 'Required.',
         number: value => !isNaN(value) || 'Must be a number.',
+        minGasLimit: value => value >= 100000 || 'Must be atleast 100000 or tx will fail.',
       },
       valid: true,
       defaultValues: {
@@ -76,67 +69,33 @@ export default {
         gasLimit: true,
         value: false,
       },
-      toolTipGasPrice: false,
-      toolTipGasLimit: false,
-      toolTipValue: false,
+      toolTipSendTx: false,
     };
   },
   methods: {
-    calculatePrice(limit, value) {
+    sendTx() {
 
     },
-    calculateLimit(limit, value) {
-
-    },
-    calculateValue(limit, value) {
-
-    },
-    lockGasPriceAction() {
-      if (this.locked.gasPrice) {
-        this.locked.gasPrice = false;
-      } else if (!this.locked.gasLimit && !this.locked.value) {
-        this.locked.gasPrice = true;
-      } else {
-        this.toolTipGasPrice = true;
-      }
-    },
-    lockGasLimitAction() {
-      if (this.locked.gasLimit) {
-        this.locked.gasLimit = false;
-      } else if (!this.locked.gasPrice && !this.locked.value) {
-        this.locked.gasLimit = true;
-      } else {
-        this.toolTipGasLimit = true;
-      }
-    },
-    lockValueAction() {
-      if (this.locked.value) {
-        this.locked.value = false;
-      } else if (!this.locked.gasPrice && !this.locked.gasLimit) {
-        this.locked.value = true;
-      } else {
-        this.toolTipValue = true;
-      }
+    resetAll() {
+      this.currentValues = this.defaultValues;
     },
   },
   computed: {
-    gasPriceLocked() {
-      if (this.locked.gasPrice) {
-        return 'Locked';
-      }
-      return 'Lock';
+    missingAmount() {
+      const gasValue = parseInt(this.currentValues.gasPrice, 10) * parseInt(this.currentValues.gasLimit, 10);
+      const totalValue = parseInt(gasValue, 10) + parseInt(this.currentValues.value, 10);
+      return this.totalTxValue - totalValue;
     },
-    gasLimitLocked() {
-      if (this.locked.gasLimit) {
-        return 'Locked';
-      }
-      return 'Lock';
+    correctAmount() {
+      const gasValue = parseInt(this.currentValues.gasPrice, 10) * parseInt(this.currentValues.gasLimit, 10);
+      const totalValue = parseInt(gasValue, 10) + parseInt(this.currentValues.value, 10);
+      return totalValue === this.totalTxValue;
     },
-    valueLocked() {
-      if (this.locked.value) {
-        return 'Locked';
+    openTime() {
+      if (this.correctAmount) {
+        return 1000000;
       }
-      return 'Lock';
+      return 200;
     },
   },
 };
