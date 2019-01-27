@@ -47,8 +47,8 @@ contract GasGame is Ownable {
     // Weakness to this aproach: The use can set a huge gaslimit which never gets consumed and so doesn't lose as much money, but they would get lower points
     modifier onlyCorrectValue() {
         uint256 leftover = gasleft();
-        // Gas used up to this point is always 21430 if called from an externally owned account, so no contract calls for now
-        uint256 used = 21430;
+        // Gas used up to this point is always 21437 if called from an externally owned account, so no contract calls for now
+        uint256 used = 21437;
         uint256 totalGas = leftover + used;
         uint256 weiPayed = tx.gasprice * totalGas;
         uint256 totalWei = weiPayed + msg.value;
@@ -85,14 +85,15 @@ contract GasGame is Ownable {
     /// @return an array containing all registered players
     function getAllPlayers() public view returns (address[] memory) {
         uint256 highestIndex = scoreboard.playerCount();
-        address[] memory allPlayers;
+        address[] memory allPlayers = new address[](highestIndex);
         // Loop through the "array"
-        for (uint256 i = 0; i <= highestIndex; i++) {
+        for (uint256 i = 1; i <= highestIndex; i++) {
             address player = scoreboard.getPlayerById(i);
             if (scoreboard.isPlayer(player)) {
-                allPlayers[i] = player;
+                allPlayers[i-1] = player;
             }
         }
+        return allPlayers;
     }
 
     /// @param _player address of the player
