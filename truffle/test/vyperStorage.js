@@ -8,6 +8,7 @@ contract('VyperStorage', (accounts) => {
   it('...should disallow calling by unset accounts.', async () => {
     const storage = await VyperStorage.deployed();
     let correctError;
+
     try {
       await storage.addPlayer(accounts[0]);
     } catch (error) {
@@ -21,7 +22,6 @@ contract('VyperStorage', (accounts) => {
     const storage = await VyperStorage.deployed();
 
     await storage.setCaller(accounts[0]);
-
     await storage.addPlayer(accounts[0]);
     const account = await storage.isPlayer(accounts[0]);
 
@@ -51,7 +51,6 @@ contract('VyperStorage', (accounts) => {
 
     await storage.addPlayer(accounts[3]);
     await storage.addScore(accounts[3], 10);
-
     const playerScore = await storage.getScore(accounts[3]);
 
     assert.equal(10, playerScore, "Didn't have correct amount of players.");

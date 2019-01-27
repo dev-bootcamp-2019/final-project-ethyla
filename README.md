@@ -108,8 +108,11 @@ Used the Ownable Contract of OpenZepplin in GasGame.sol
 
 ### Tests
 
-Gasgame.sol has 0 tests.
-VyperStorage.vy has 5 tests.
+#### Gasgame.sol has 2 tests.
+- Check only owner has access to maintenance function
+- Unsure how to test contracts depending on others
+
+#### VyperStorage.vy has 5 tests.
 The tests check the most basic functionality, such as:
 - Only allowed addresses can manipulate the state
 - The state updates correctly
