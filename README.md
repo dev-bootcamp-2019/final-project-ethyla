@@ -16,7 +16,13 @@ All earned points are collected in a different contract that acts as a highscore
 
 ## Further ideas
 
+- Implement a "winner", the player with the most points during a round will get all send ether as a reward
+- Implement various common functions (such as ERC-20 transfer or kitty breeding) that give various amounts of points. This could be done to teach players how different transactions and their required gas require different strategies to get early into a block. (Very useful for example during ICOs).
 
+## Problems
+
+- Not all miners order just by gasprice, there are different strategies, this needs to be shown to users
+- Running the game every block probably leads to a low player density per round. Restricting rounds to specific blocks was already implemented, but it has a horrible UX, because it is difficult to know when exactly a new block is created, and impossible to know if your tx will be included in the chosen block.
 
 
 ## Running the dev setup
