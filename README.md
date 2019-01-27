@@ -1,7 +1,3 @@
-# Please do not grade this yet.
-## I will be working on in through Sunday, I will remove this text when I'm finished.
-### Thank you :)
-
 # GasGame
 
 ## Motivation
