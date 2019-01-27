@@ -18,10 +18,9 @@
       </template>
     <template slot="items" slot-scope="props">
           <td class="text-xs-left ">{{ props.item.points }}</td>
-          <td class="text-xs-left">{{ props.item.address }}</td>
           <td class="text-xs-left">{{ props.item.gasPrice }}</td>
           <td class="text-xs-left">{{ props.item.gasLimit }}</td>
-
+          <td class="text-xs-left">{{ props.item.address }}</td>
         </template>
     <v-alert slot="no-results" :value="true" color="error">
       Your search for "{{ search }}" found no results.
@@ -32,6 +31,14 @@
 </template>
 
 <script>
+import {
+  mapGetters,
+} from 'vuex';
+import {
+  gasGameContract,
+  web3,
+} from '../services/web3Adapter';
+
 export default {
   data() {
     return {
@@ -48,12 +55,6 @@ export default {
         sortable: true,
         value: 'points',
       }, {
-        text: 'Address',
-        tooltip: 'Address of the player.',
-        align: 'left',
-        sortable: false,
-        value: 'address',
-      }, {
         text: 'GasPrice',
         tooltip: 'GasPrice of the transaction.',
         align: 'left',
@@ -65,57 +66,56 @@ export default {
         align: 'left',
         sortable: true,
         value: 'gasLimit',
+      }, {
+        text: 'Address',
+        tooltip: 'Address of the player.',
+        align: 'left',
+        sortable: false,
+        value: 'address',
       }],
-      tx: [{
-        value: false,
-        points: 101,
-        address: '0x98765678...',
-        gasLimit: '1230000',
-        gasPrice: '1000000000',
-      }, {
-        value: false,
-        points: 101,
-        address: '0x98765678...',
-        gasLimit: '1230000',
-        gasPrice: '100000000',
-      }, {
-        value: false,
-        points: 101,
-        address: '0x98765678...',
-        gasLimit: '1230000',
-        gasPrice: '10000000',
-      }, {
-        value: false,
-        points: 101,
-        address: '0x98765678...',
-        gasLimit: '1230000',
-        gasPrice: '2000000000',
-      }, {
-        value: false,
-        points: 101,
-        address: '0x98765678...',
-        gasLimit: '1230000',
-        gasPrice: '1000000000',
-      }, {
-        value: false,
-        points: 101,
-        address: '0x98765678...',
-        gasLimit: '1230000',
-        gasPrice: '1000000000',
-      }, {
-        value: false,
-        points: 101,
-        address: '0x98765678...',
-        gasLimit: '1230000',
-        gasPrice: '1000000000',
-      }, {
-        value: false,
-        points: 101,
-        address: '0x98765678...',
-        gasLimit: '1230000',
-        gasPrice: '1000000000',
-      }],
+      tx: [],
     };
+  },
+  watch: {
+    init(to) {
+      if (to === true) {
+        this.fetchAllLastTx();
+      }
+    },
+    currentBlock() {
+      this.players = [];
+      this.fetchAllLastTx();
+    },
+  },
+  methods: {
+    async fetchAllLastTx() {
+      const allLastEvents = await gasGameContract.getPastEvents('ScoreAdded', {
+        fromBlock: this.currentBlock,
+        toBlock: this.currentBlock,
+      });
+      const promiseArray = [];
+      // eslint-disable-next-line
+      for (const element in allLastEvents) {
+        const txHash = allLastEvents[element].transactionHash;
+        const points = allLastEvents[element].returnValues.score;
+        promiseArray.push(this.fetchData(txHash, points));
+      }
+      Promise.all(promiseArray);
+    },
+    async fetchData(txhash, points) {
+      const txData = await web3.eth.getTransaction(txhash);
+      const txObj = {
+        value: false,
+        points,
+        address: txData.from,
+        gasLimit: txData.gas,
+        gasPrice: txData.gasPrice,
+      };
+      this.tx.push(txObj);
+    },
+  },
+  computed: {
+    ...mapGetters('web3Data', ['init', 'currentBlock']),
   },
 };
 </script>
