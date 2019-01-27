@@ -35,8 +35,11 @@ npm install
 npm run serve
 ```
 
+Visit http://localhost:8080
+
 For interacting with the contract you will need Metamask.
 For testing you won't need to deploy the contracts, the DApp uses the rinkeby contracts in this repo.
+
 ### Truffle
 
 Because there seems to be a bug in relation to using vyper with truffle, please first delete the truffle/build folder.  
@@ -105,7 +108,7 @@ npm run lint
 
 Used the Ownable Contract of OpenZepplin in GasGame.sol
 
-## Tests
+### Tests
 
 Gasgame.sol has 0 tests.
 VyperStorage.vy has 5 tests.
@@ -114,13 +117,16 @@ The tests check the most basic functionality, such as:
 - The state updates correctly
 - The state is readable
 
-## Emergency Stop
+### Emergency Stop
 
 While there is no circuit breaker it is still possible to stop the DApp in two ways.
 - While still in control  (being owner) of VyperStorage it is possible to disallow the current GasGame from modifying the scoreboard via the removeCaller function.
 - While still in control (being owner) of GasGame it is possible to change the allowed value for example to 1 via the setTxValue function. This will disallow any calls to the contracts play function that have a different total value than 1 (a transactions is at least 21000 gas, with a gasprice of 1 the total value will still be at least 21000).  
 It is also theoretically possible (especially for miners) to have a gasprice of 0, so the better way would be to set the allowed value to MAX_INT for uint256 which is bigger than all ether combined, making an attack impossible
 
+###  Updating the UI
+
+The UI is updated every new block, by polling new blocks.
 
 ## Stretch Requirements
 
