@@ -33,7 +33,7 @@ contract GasGame is Ownable {
         // Sets the lastBlock to a round number, so that the game takes place every tenth block (Only to make the number nice :))
         lastBlock = block.number - (block.number % 10);
         // Sets the enforced total value of a tx
-        txValue = 3000000;
+        txValue = 100000000000000000;
     }
 
     // Only allows calls on blocknumbers ending with 000
