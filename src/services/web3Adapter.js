@@ -1,6 +1,6 @@
 import Web3 from 'web3';
 import GasGame from '../../truffle/build/contracts/GasGame.json';
-
+import store from '../store';
 /* global ethereum */
 
 let web3;
@@ -22,6 +22,7 @@ const web3Adapter = {
     } else {
       console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
     }
+    store.dispatch('web3Data/setInit');
     ethereum.on('accountsChanged', (accounts) => {
       userAccount = accounts[0];
     });
