@@ -62,13 +62,13 @@ export default {
       },
       valid: true,
       defaultValues: {
-        gasPrice: 20000000000,
-        gasLimit: 1000000,
+        gasPrice: 10000000000,
+        gasLimit: 2000000,
         value: 80000000000000000,
       },
       currentValues: {
-        gasPrice: 20000000000,
-        gasLimit: 1000000,
+        gasPrice: 10000000000,
+        gasLimit: 2000000,
         value: 80000000000000000,
       },
       totalTxValue: 100000000000000000,
