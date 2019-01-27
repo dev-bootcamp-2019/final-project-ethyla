@@ -30,15 +30,15 @@ contract GasGame is Ownable {
     constructor(address _scoreboard) public {
         // Sets the address of the highscore
         scoreboard = Scoreboard(_scoreboard);
-        // Sets the lastBlock to a round number, so that the game takes place every thousandth block (Only to make the number nice :))
-        lastBlock = block.number - (block.number % 1000);
+        // Sets the lastBlock to a round number, so that the game takes place every tenth block (Only to make the number nice :))
+        lastBlock = block.number - (block.number % 10);
         // Sets the enforced total value of a tx
         txValue = 3000000;
     }
 
     // Only allows calls on blocknumbers ending with 000
-    modifier onlyThousandthBlock() {
-        require(block.number % 1000 == 0, "This is not a thousandth block.");
+    modifier onlyTenthBlock() {
+        require(block.number % 10 == 0, "This is not a tenth block.");
         _;
     }
 
@@ -56,7 +56,7 @@ contract GasGame is Ownable {
     }
 
     /// @dev Function that calculates total points for a player and saves them to the scoreboard
-    function play() public payable onlyThousandthBlock {
+    function play() public payable onlyTenthBlock onlyCorrectValue{
         uint256 score = gasleft();
         // If last block is still the block of the last game the caller is the first one this block
         if (lastBlock != block.number) {
