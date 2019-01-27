@@ -114,7 +114,23 @@ The tests check the most basic functionality, such as:
 - The state updates correctly
 - The state is readable
 
+## Emergency Stop
+
+While there is no circuit breaker it is still possible to stop the DApp in two ways.
+- While still in control  (being owner) of VyperStorage it is possible to disallow the current GasGame from modifying the scoreboard via the removeCaller function.
+- While still in control (being owner) of GasGame it is possible to change the allowed value for example to 1 via the setTxValue function. This will disallow any calls to the contracts play function that have a different total value than 1 (a transactions is at least 21000 gas, with a gasprice of 1 the total value will still be at least 21000).  
+It is also theoretically possible (especially for miners) to have a gasprice of 0, so the better way would be to set the allowed value to MAX_INT for uint256 which is bigger than all ether combined, making an attack impossible
+
 
 ## Stretch Requirements
 
+### Vyper
+
 One of the contracts is written in vyper. (VyperStorage.vy)
+
+### Upgradeable contract
+
+The storage is separated from the game logic, this makes it possible to make changes to the game, deploying a new contract, but keeping the old highscore.
+Of course proper balancing is important, but all players can keep (without the need to do anything) playing the game with their score.  
+Additionally the storage contract restricts the contracts that are allowed to call it while also allowing multiple contracts to change its state. This makes it possible to keep old versions of the game active, so that players can play which ever version they like best, while still competing on a single leaderboard.  
+The disallowing of calls makes it possible to keep the storage even if one game version has breaking bugs.  
