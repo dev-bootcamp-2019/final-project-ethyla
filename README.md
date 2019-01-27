@@ -140,3 +140,18 @@ The storage is separated from the game logic, this makes it possible to make cha
 Of course proper balancing is important, but all players can keep (without the need to do anything) playing the game with their score.  
 Additionally the storage contract restricts the contracts that are allowed to call it while also allowing multiple contracts to change its state. This makes it possible to keep old versions of the game active, so that players can play which ever version they like best, while still competing on a single leaderboard.  
 The disallowing of calls makes it possible to keep the storage even if one game version has breaking bugs.  
+
+### IPFS
+
+The app is hosted on ipfs. You can access it on one of the gateways:
+
+https://gateway.ipfs.io/ipfs/QmXSxVDpY3iydHrypQw7rw8mjxEtbcCiRH9Jqx2SdRxNfB/
+
+Or on your own local gateway:
+#### IPNS (I might update this later, the ipfs link is the project submitted at the deadline)  
+http://localhost:8080/ipns/QmRTaWxw9yTvFRxPNm3ZCD22raTrbN2PgZvTiKWYuroYN8/
+
+#### IPFS  
+http://localhost:8080/ipfs/QmXSxVDpY3iydHrypQw7rw8mjxEtbcCiRH9Jqx2SdRxNfB/
+
+###### Important, because I only host it on my laptop and the gateways only cache so long (I also pined it on infura) it might not be reachable, send me a mail and I will start my local node.
