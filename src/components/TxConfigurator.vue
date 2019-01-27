@@ -39,6 +39,23 @@
       </v-layout>
     </v-form>
   </v-flex>
+  <v-dialog v-model="txPendingDialog" hide-overlay persistent width="300">
+    <v-card color="primary" dark>
+      <v-card-text v-if="status === 'waiting'">
+        Transaction is waiting to be processed...
+        <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
+      </v-card-text>
+      <v-card-text v-else-if="status === 'failed'">
+        Transaction encountered an error.
+      </v-card-text>
+      <v-card-text v-else-if="status === 'success'">
+        Transaction was successful.
+      </v-card-text>
+      <v-card-actions>
+        <v-btn @click="closeDialog()">Close</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </v-layout>
 </template>
 
@@ -78,19 +95,31 @@ export default {
         value: false,
       },
       toolTipSendTx: false,
+      txPendingDialog: false,
+      status: 'waiting',
     };
   },
   methods: {
     async sendTx() {
-      gasGameContract.methods.play().send({
-        gas: this.currentValues.gasLimit,
-        gasPrice: this.currentValues.gasPrice,
-        value: this.currentValues.value,
-        from: userAccount,
-      });
+      this.txPendingDialog = true;
+      try {
+        await gasGameContract.methods.play().send({
+          gas: this.currentValues.gasLimit,
+          gasPrice: this.currentValues.gasPrice,
+          value: this.currentValues.value,
+          from: userAccount,
+        });
+        this.status = 'success';
+      } catch (e) {
+        this.status = 'failed';
+      }
     },
     resetAll() {
       this.currentValues = this.defaultValues;
+    },
+    closeDialog() {
+      this.status = 'waiting';
+      this.txPendingDialog = false;
     },
   },
   computed: {
