@@ -28,9 +28,9 @@
         <v-flex>
           <v-layout align-top pb-4>
             <v-tooltip :open-delay="openTime" top open-on-hover="false">
-              <v-btn :disabled="!valid || !correctAmount || !correctBlock" slot="activator" @click="sendTx" color="primary">Send Tx</v-btn>
+              <v-btn :disabled="!valid || !correctAmount" slot="activator" @click="sendTx" color="primary">Send Tx</v-btn>
               <span v-if="!correctAmount">You are missing {{missingAmount}} worth of wei.</span>
-              <span v-else-if="!correctBlock">Game is only active every 10th block.</span>
+              <!-- <span v-else-if="!correctBlock">Game is only active every 10th block.</span> -->
             </v-tooltip>
             <v-btn @click="resetAll" color="primary">Reset All</v-btn>
           </v-layout>
@@ -107,7 +107,7 @@ export default {
       return totalValue === this.totalTxValue;
     },
     openTime() {
-      if (this.correctAmount && this.correctBlock) {
+      if (this.correctAmount) {
         return 1000000;
       }
       return 200;
