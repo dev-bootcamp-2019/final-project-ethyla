@@ -150,7 +150,7 @@ The disallowing of calls makes it possible to keep the storage even if one game 
 
 The app is hosted on ipfs. You can access it on one of the gateways:
 
-https://gateway.ipfs.io/ipfs/QmY9AggW1Nwwkzrtqf9jEp6JpeHccehVQxK5yFdVqduZmJ/
+https://gateway.ipfs.io/ipfs/QmVy53SyMyAmvZb6i5vA1jyc2VT18aVkNbN4rBFJpE2sz8/
 
 Or on your own local gateway:
 
@@ -158,6 +158,6 @@ Or on your own local gateway:
 http://localhost:8080/ipns/QmRTaWxw9yTvFRxPNm3ZCD22raTrbN2PgZvTiKWYuroYN8/
 
 ##### IPFS  
-http://localhost:8080/ipfs/QmY9AggW1Nwwkzrtqf9jEp6JpeHccehVQxK5yFdVqduZmJ/
+http://localhost:8080/ipfs/QmVy53SyMyAmvZb6i5vA1jyc2VT18aVkNbN4rBFJpE2sz8/
 
 ###### Important, because I only host it on my laptop and the gateways only cache so long (I also pined it on infura) it might not be reachable, send me a mail and I will start my local node.
