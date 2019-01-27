@@ -66,43 +66,20 @@
     </v-layout>
   </v-flex>
   <v-flex xs6 pl-3 align-self-start>
-    <v-card>
-      <v-card-title>
-        Highscore
-        <v-spacer></v-spacer>
-        <v-text-field v-model="search" label="Search" single-line hide-details></v-text-field>
-      </v-card-title>
-      <v-data-table hide-actions :pagination.sync="pagination" :headers="headers" :items="players" :search="search" class="elevation-1 scroll" style="max-height:77vh;">
-        <template slot="headerCell" slot-scope="props">
-          <v-tooltip bottom>
-            <span slot="activator">
-              {{ props.header.text }}
-            </span>
-            <span>
-              {{ props.header.tooltip }}
-            </span>
-          </v-tooltip>
-        </template>
-        <template slot="items" slot-scope="props">
-          <td class="text-xs-left ">{{ props.item.points }}</td>
-          <td class="text-xs-left">{{ props.item.address }}</td>
-        </template>
-        <v-alert slot="no-results" :value="true" color="error">
-          Your search for "{{ search }}" found no results.
-        </v-alert>
-      </v-data-table>
-    </v-card>
+    <Highscore></Highscore>
   </v-flex>
 </v-layout>
 </template>
 
 <script>
 import TxConfigurator from '../components/TxConfigurator.vue';
+import Highscore from '../components/Highscore.vue';
 
 export default {
   name: 'home',
   components: {
     TxConfigurator,
+    Highscore,
   },
   data() {
     return {
