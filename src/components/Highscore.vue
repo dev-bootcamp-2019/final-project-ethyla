@@ -28,6 +28,14 @@
 </template>
 
 <script>
+import {
+  mapGetters,
+} from 'vuex';
+import {
+  gasGameContract,
+} from '../services/web3Adapter';
+
+
 export default {
   data() {
     return {
@@ -50,124 +58,42 @@ export default {
         sortable: false,
         value: 'address',
       }],
-      players: [{
-        value: false,
-        points: 101,
-        address: '0x98765678...',
-      }, {
-        value: false,
-        points: 100,
-        address: '0x98765678...',
-      }, {
-        value: false,
-        points: 100,
-        address: '0x98765678...',
-      }, {
-        value: false,
-        points: 100,
-        address: '0x98765678...',
-      }, {
-        value: false,
-        points: 100,
-        address: '0x98765678...',
-      }, {
-        value: false,
-        points: 20,
-        address: '0x98765678...',
-      }, {
-        value: false,
-        points: 100,
-        address: '0x98765678...',
-      }, {
-        value: false,
-        points: 200,
-        address: '0x98765678...',
-      }, {
-        value: false,
-        points: 200,
-        address: '0x98765678...',
-      }, {
-        value: false,
-        points: 200,
-        address: '0x98765678...',
-      }, {
-        value: false,
-        points: 200,
-        address: '0x98765678...',
-      }, {
-        value: false,
-        points: 200,
-        address: '0x98765678...',
-      }, {
-        value: false,
-        points: 200,
-        address: '0x98765678...',
-      }, {
-        value: false,
-        points: 200,
-        address: '0x98765678...',
-      }, {
-        value: false,
-        points: 200,
-        address: '0x98765678...',
-      }, {
-        value: false,
-        points: 200,
-        address: '0x98765678...',
-      }, {
-        value: false,
-        points: 200,
-        address: '0x98765678...',
-      }, {
-        value: false,
-        points: 200,
-        address: '0x98765678...',
-      }, {
-        value: false,
-        points: 200,
-        address: '0x98765678...',
-      }, {
-        value: false,
-        points: 200,
-        address: '0x98765678...',
-      }, {
-        value: false,
-        points: 200,
-        address: '0x98765678...',
-      }, {
-        value: false,
-        points: 200,
-        address: '0x98765678...',
-      }, {
-        value: false,
-        points: 200,
-        address: '0x98765678...',
-      }, {
-        value: false,
-        points: 200,
-        address: '0x98765678...',
-      }, {
-        value: false,
-        points: 200,
-        address: '0x98765678...',
-      }, {
-        value: false,
-        points: 200,
-        address: '0x98765678...',
-      }, {
-        value: false,
-        points: 200,
-        address: '0x98765678...',
-      }, {
-        value: false,
-        points: 200,
-        address: '0x98765678...',
-      }, {
-        value: false,
-        points: 200,
-        address: '0x98765678...',
-      }],
+      players: [],
     };
+  },
+  created() {
+
+    // this.fetchAllPlayers();
+  },
+  watch: {
+    init(to) {
+      if (to === true) {
+        this.fetchAllPlayers();
+      }
+    },
+  },
+  methods: {
+    async fetchAllPlayers() {
+      const playerArray = await gasGameContract.methods.getAllPlayers().call();
+      console.log(playerArray);
+      // eslint-disable-next-line
+      for (const element in playerArray) {
+        const address = playerArray[element];
+        const points = await gasGameContract.methods.getScore(address).call();
+        const playerObj = {
+          value: false,
+          points,
+          address,
+        };
+        this.players.push(playerObj);
+      }
+      // value: false,
+      // points: 200,
+      // address: '0x98765678...',
+    },
+  },
+  computed: {
+    ...mapGetters('web3Data', ['init']),
   },
 };
 </script>
