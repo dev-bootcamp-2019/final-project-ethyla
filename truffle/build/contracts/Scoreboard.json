@@ -109,7 +109,7 @@
   "deployedBytecode": "0x",
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "pragma solidity ^0.5;\n\nimport \"openzeppelin-solidity/contracts/ownership/Ownable.sol\";\n\n// Interface for calling the permanent storage\ncontract Scoreboard {\n    function addScore(address, uint256) public;\n    function isPlayer(address) public view returns (bool);\n    function addPlayer(address) public;\n    function playerCount() public view returns (uint256);\n    function getPlayerById(uint256) public view returns (address);\n    function getScore(address) public view returns (uint256);\n}\n\n/// @title A Contract that enforces same total value for all tx\ncontract GasGame is Ownable {\n\n    // Permanent Scoreboard\n    Scoreboard scoreboard;\n\n    // Enforced exact total value a tx must have\n    uint256 txValue;\n\n    // Last block this game was played at\n    uint256 lastBlock;\n\n    // Player played the game and got points, score is points of current round\n    event ScoreAdded(address player, uint256 score);\n\n    constructor(address _scoreboard) public {\n        // Sets the address of the highscore\n        scoreboard = Scoreboard(_scoreboard);\n        // Sets the lastBlock to a round number, so that the game takes place every tenth block (Only to make the number nice :))\n        lastBlock = block.number;\n        // Sets the enforced total value of a tx\n        txValue = 100000000000000000;\n    }\n\n    // Only allows calls on blocknumbers ending with 0\n    // Doesn't work good enough, UX is really bad, so disabled for now\n    /* modifier onlyTenthBlock() {\n        require(block.number % 10 == 0, \"This is not a tenth block.\");\n        _;\n    } */\n\n    // Enforces the exact total amount of a tx, by computing total gaslimit and used wei for purchasing gas plus remaining wei value of the tx\n    // Weakness to this aproach: The use can set a huge gaslimit which never gets consumed and so doesn't lose as much money, but they would get lower points\n    modifier onlyCorrectValue() {\n        uint256 leftover = gasleft();\n        // Gas used up to this point is always 21437 if called from an externally owned account, so no contract calls for now\n        uint256 used = 21437;\n        uint256 totalGas = leftover + used;\n        uint256 weiPayed = tx.gasprice * totalGas;\n        uint256 totalWei = weiPayed + msg.value;\n        require(totalWei == txValue, \"Total tx value does not match expected value.\");\n        _;\n    }\n\n    /// @dev Function that calculates total points for a player and saves them to the scoreboard\n    function play() public payable onlyCorrectValue{\n        uint256 score = gasleft();\n        // If last block is still the block of the last game the caller is the first one this block\n        if (lastBlock != block.number) {\n            //Set a new lastBlock so that following tx know that they aren't the first\n            lastBlock = block.number;\n            // Double the score as a reward for being the first\n            score = score * 2;\n        }\n        // Check if user is already on scoreboard\n        if (!scoreboard.isPlayer(msg.sender)) {\n            scoreboard.addPlayer(msg.sender);\n        }\n        // Add score to scoreboard\n        scoreboard.addScore(msg.sender, score);\n        emit ScoreAdded(msg.sender, score);\n    }\n\n    /// @param _newValue of the total allowed value of a single tx\n    /// @dev Sets a new value that tx must use\n    function setTxValue(uint256 _newValue) public onlyOwner {\n        txValue = _newValue;\n    }\n\n    /// @dev Convenience function to return all addresses of all players\n    /// @return an array containing all registered players\n    function getAllPlayers() public view returns (address[] memory) {\n        uint256 highestIndex = scoreboard.playerCount();\n        address[] memory allPlayers = new address[](highestIndex);\n        // Loop through the \"array\"\n        for (uint256 i = 1; i <= highestIndex; i++) {\n            address player = scoreboard.getPlayerById(i);\n            if (scoreboard.isPlayer(player)) {\n                allPlayers[i-1] = player;\n            }\n        }\n        return allPlayers;\n    }\n\n    /// @param _player address of the player\n    /// @dev Convenience function to return the total score of a single player\n    /// @return the total number of points of the player\n    function getScore(address _player) public view returns (uint256) {\n        return scoreboard.getScore(_player);\n    }\n}\n",
+  "source": "pragma solidity ^0.5;\n\nimport \"openzeppelin-solidity/contracts/ownership/Ownable.sol\";\n\n// Interface for calling the permanent storage\ncontract Scoreboard {\n    function addScore(address, uint256) public;\n    function isPlayer(address) public view returns (bool);\n    function addPlayer(address) public;\n    function playerCount() public view returns (uint256);\n    function getPlayerById(uint256) public view returns (address);\n    function getScore(address) public view returns (uint256);\n}\n\n/// @title A Contract that enforces same total value for all tx\ncontract GasGame is Ownable {\n\n    // Permanent Scoreboard\n    Scoreboard scoreboard;\n\n    // Enforced exact total value a tx must have\n    uint256 txValue;\n\n    // Last block this game was played at\n    uint256 lastBlock;\n\n    // Player played the game and got points, score is points of current round\n    event ScoreAdded(address player, uint256 score);\n\n    constructor(address _scoreboard) public {\n        // Sets the address of the highscore\n        scoreboard = Scoreboard(_scoreboard);\n        // Sets the lastBlock to a round number, so that the game takes place every tenth block (Only to make the number nice :))\n        lastBlock = block.number;\n        // Sets the enforced total value of a tx\n        txValue = 100000000000000000;\n    }\n\n    // Only allows calls on blocknumbers ending with 0\n    // Doesn't work good enough, UX is really bad, so disabled for now\n    /* modifier onlyTenthBlock() {\n        require(block.number % 10 == 0, \"This is not a tenth block.\");\n        _;\n    } */\n\n    // Enforces the exact total amount of a tx, by computing total gaslimit and used wei for purchasing gas plus remaining wei value of the tx\n    // Weakness to this aproach: The use can set a huge gaslimit which never gets consumed and so doesn't lose as much money, but they would get lower points\n    modifier onlyCorrectValue() {\n        uint256 leftover = gasleft();\n        // Gas used up to this point is always 21437 if called from an externally owned account, so no contract calls for now\n        uint256 used = 21443;\n        uint256 totalGas = leftover + used;\n        uint256 weiPayed = tx.gasprice * totalGas;\n        uint256 totalWei = weiPayed + msg.value;\n        require(totalWei == txValue, \"Total tx value does not match expected value.\");\n        _;\n    }\n\n    /// @dev Function that calculates total points for a player and saves them to the scoreboard\n    function play() public payable onlyCorrectValue{\n        uint256 score = gasleft();\n        // If last block is still the block of the last game the caller is the first one this block\n        if (lastBlock != block.number) {\n            //Set a new lastBlock so that following tx know that they aren't the first\n            lastBlock = block.number;\n            // Double the score as a reward for being the first\n            score = score * 2;\n        }\n        // Check if user is already on scoreboard\n        if (!scoreboard.isPlayer(msg.sender)) {\n            scoreboard.addPlayer(msg.sender);\n        }\n        // Add score to scoreboard\n        scoreboard.addScore(msg.sender, score);\n        emit ScoreAdded(msg.sender, score);\n    }\n\n    /// @param _newValue of the total allowed value of a single tx\n    /// @dev Sets a new value that tx must use\n    function setTxValue(uint256 _newValue) public onlyOwner {\n        txValue = _newValue;\n    }\n\n    /// @dev Convenience function to return all addresses of all players\n    /// @return an array containing all registered players\n    function getAllPlayers() public view returns (address[] memory) {\n        uint256 highestIndex = scoreboard.playerCount();\n        address[] memory allPlayers = new address[](highestIndex);\n        // Loop through the \"array\"\n        for (uint256 i = 1; i <= highestIndex; i++) {\n            address player = scoreboard.getPlayerById(i);\n            if (scoreboard.isPlayer(player)) {\n                allPlayers[i-1] = player;\n            }\n        }\n        return allPlayers;\n    }\n\n    /// @param _player address of the player\n    /// @dev Convenience function to return the total score of a single player\n    /// @return the total number of points of the player\n    function getScore(address _player) public view returns (uint256) {\n        return scoreboard.getScore(_player);\n    }\n}\n",
   "sourcePath": "/Users/maximiliann/Desktop/gasgame/truffle/contracts/GasGame.sol",
   "ast": {
     "absolutePath": "/Users/maximiliann/Desktop/gasgame/truffle/contracts/GasGame.sol",
@@ -1146,7 +1146,7 @@
                   "id": 86,
                   "initialValue": {
                     "argumentTypes": null,
-                    "hexValue": "3231343337",
+                    "hexValue": "3231343433",
                     "id": 85,
                     "isConstant": false,
                     "isLValue": false,
@@ -1157,10 +1157,10 @@
                     "src": "2085:5:0",
                     "subdenomination": null,
                     "typeDescriptions": {
-                      "typeIdentifier": "t_rational_21437_by_1",
-                      "typeString": "int_const 21437"
+                      "typeIdentifier": "t_rational_21443_by_1",
+                      "typeString": "int_const 21443"
                     },
-                    "value": "21437"
+                    "value": "21443"
                   },
                   "nodeType": "VariableDeclarationStatement",
                   "src": "2070:20:0"
@@ -4346,7 +4346,7 @@
                   "id": 86,
                   "initialValue": {
                     "argumentTypes": null,
-                    "hexValue": "3231343337",
+                    "hexValue": "3231343433",
                     "id": 85,
                     "isConstant": false,
                     "isLValue": false,
@@ -4357,10 +4357,10 @@
                     "src": "2085:5:0",
                     "subdenomination": null,
                     "typeDescriptions": {
-                      "typeIdentifier": "t_rational_21437_by_1",
-                      "typeString": "int_const 21437"
+                      "typeIdentifier": "t_rational_21443_by_1",
+                      "typeString": "int_const 21443"
                     },
-                    "value": "21437"
+                    "value": "21443"
                   },
                   "nodeType": "VariableDeclarationStatement",
                   "src": "2070:20:0"
@@ -6517,7 +6517,7 @@
   },
   "networks": {},
   "schemaVersion": "3.0.1",
-  "updatedAt": "2019-01-27T16:48:28.591Z",
+  "updatedAt": "2019-01-27T21:51:09.514Z",
   "devdoc": {
     "methods": {}
   },

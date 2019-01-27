@@ -79,15 +79,15 @@ export default {
       valid: true,
       defaultValues: {
         gasPrice: 10000000000,
-        gasLimit: 2000006,
+        gasLimit: 2000000,
         value: 80000000000000000,
       },
       currentValues: {
         gasPrice: 10000000000,
-        gasLimit: 2000006,
+        gasLimit: 2000000,
         value: 80000000000000000,
       },
-      totalTxValue: 100000060000000000,
+      totalTxValue: 100000000000000000,
       locked: {
         gasPrice: false,
         gasLimit: true,

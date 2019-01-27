@@ -48,7 +48,7 @@ contract GasGame is Ownable {
     modifier onlyCorrectValue() {
         uint256 leftover = gasleft();
         // Gas used up to this point is always 21437 if called from an externally owned account, so no contract calls for now
-        uint256 used = 21437;
+        uint256 used = 21443;
         uint256 totalGas = leftover + used;
         uint256 weiPayed = tx.gasprice * totalGas;
         uint256 totalWei = weiPayed + msg.value;
