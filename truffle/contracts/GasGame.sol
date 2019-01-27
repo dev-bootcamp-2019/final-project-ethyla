@@ -31,16 +31,17 @@ contract GasGame is Ownable {
         // Sets the address of the highscore
         scoreboard = Scoreboard(_scoreboard);
         // Sets the lastBlock to a round number, so that the game takes place every tenth block (Only to make the number nice :))
-        lastBlock = block.number - (block.number % 10);
+        lastBlock = block.number;
         // Sets the enforced total value of a tx
         txValue = 100000000000000000;
     }
 
-    // Only allows calls on blocknumbers ending with 000
-    modifier onlyTenthBlock() {
+    // Only allows calls on blocknumbers ending with 0
+    // Doesn't work good enough, UX is really bad, so disabled for now
+    /* modifier onlyTenthBlock() {
         require(block.number % 10 == 0, "This is not a tenth block.");
         _;
-    }
+    } */
 
     // Enforces the exact total amount of a tx, by computing total gaslimit and used wei for purchasing gas plus remaining wei value of the tx
     // Weakness to this aproach: The use can set a huge gaslimit which never gets consumed and so doesn't lose as much money, but they would get lower points
@@ -56,7 +57,7 @@ contract GasGame is Ownable {
     }
 
     /// @dev Function that calculates total points for a player and saves them to the scoreboard
-    function play() public payable onlyTenthBlock onlyCorrectValue{
+    function play() public payable onlyCorrectValue{
         uint256 score = gasleft();
         // If last block is still the block of the last game the caller is the first one this block
         if (lastBlock != block.number) {
