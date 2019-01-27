@@ -71,29 +71,34 @@ export default {
         this.fetchAllPlayers();
       }
     },
+    currentBlock() {
+      this.players = [];
+      this.fetchAllPlayers();
+    },
   },
   methods: {
     async fetchAllPlayers() {
       const playerArray = await gasGameContract.methods.getAllPlayers().call();
-      console.log(playerArray);
+      const promiseArray = [];
       // eslint-disable-next-line
       for (const element in playerArray) {
         const address = playerArray[element];
-        const points = await gasGameContract.methods.getScore(address).call();
-        const playerObj = {
-          value: false,
-          points,
-          address,
-        };
-        this.players.push(playerObj);
+        promiseArray.push(this.fetchPlayer(address));
       }
-      // value: false,
-      // points: 200,
-      // address: '0x98765678...',
+      Promise.all(promiseArray);
+    },
+    async fetchPlayer(address) {
+      const points = await gasGameContract.methods.getScore(address).call();
+      const playerObj = {
+        value: false,
+        points,
+        address,
+      };
+      this.players.push(playerObj);
     },
   },
   computed: {
-    ...mapGetters('web3Data', ['init']),
+    ...mapGetters('web3Data', ['init', 'currentBlock']),
   },
 };
 </script>
